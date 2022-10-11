@@ -1,0 +1,12 @@
+<article>
+  <ul>
+    <li>
+      Автор: {{ author.get_full_name }}
+      <a href="{% url 'posts:user' post.author %}">все посты пользователя</a>
+    </li>
+    <li>
+      Дата публикации: {{ post.pub_date|date:"d E Y" }} 
+    </li>
+  </ul>
+  <p>{{ post.text| linebreaksbr }}</p>
+</article>
