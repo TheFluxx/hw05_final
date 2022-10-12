@@ -109,11 +109,11 @@ class PostCreateFormTests(TestCase):
             'text': 'text',
         }
         response = self.authorized_client.post(
-            reverse('posts:add_comment', 
-            kwargs={'post_id': f'{self.post.id}'}),
-            data=form_data
+            reverse('posts:add_comment',
+                    kwargs={'post_id': f'{self.post.id}'}),
+                    data=form_data
         )
         self.assertRedirects(response, reverse('posts:post_detail',
-                                    kwargs={'post_id': f'{self.post.id}'}))
+                             kwargs={'post_id': f'{self.post.id}'}))
         self.assertEqual(Comment.objects.count(), comments_count + 1)
         self.assertEqual(Comment.objects.first().text, 'text')
