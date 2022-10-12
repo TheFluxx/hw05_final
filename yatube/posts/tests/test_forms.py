@@ -91,22 +91,6 @@ class PostCreateFormTests(TestCase):
         POST_EDIT_URL = f'/posts/{self.post.id}/edit/'
         self.assertRedirects(response, f'{LOGIN_URL}?next={POST_EDIT_URL}')
 
-    def test_create_post_with_img(self):
-        """Валидная форма создает запись в Task."""
-        posts_count = Post.objects.count()
-
-        uploaded = SimpleUploadedFile(
-            name='small.gif',
-            content=SMALL_GIF,
-            content_type='image/gif'
-        )
-        form_data = {
-            'text': 'text',
-            'group': self.group.id,
-            'image': uploaded,
-        }
-        self.assertEqual(Post.objects.count(), posts_count + 1)
-
     def test_guest_comment_post(self):
         response = self.guest_client.post(
             reverse('posts:add_comment',
@@ -128,11 +112,10 @@ class PostCreateFormTests(TestCase):
         }
         response = self.authorized_client.post(
             reverse('posts:add_comment',
-                             kwargs={'post_id': f'{self.post.id}'}),
-                                                data=form_data
+                    kwargs={'post_id': f'{self.post.id}'}),
+                    data=form_data
         )
         self.assertRedirects(response, reverse('posts:post_detail',
-                             kwargs={'post_id':
-                                     f'{self.post.id}'}))
+                            kwargs={'post_id': f'{self.post.id}'}))
         self.assertEqual(Comment.objects.count(), comments_count + 1)
         self.assertEqual(Comment.objects.first().text, 'text')
