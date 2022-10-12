@@ -27,7 +27,7 @@ class Post(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         related_name='posts'
-    )   
+    )
     image = models.ImageField(
         'Картинка',
         upload_to='posts/',
@@ -61,7 +61,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
-    
+
     class Meta:
         ordering = ["-created"]
 
@@ -77,4 +77,3 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='following'
     )
-

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Post, Group, User, Comment, Follow
+from .models import Post, Group, User, Follow
 
 from .forms import PostForm, CommentForm
 
@@ -13,7 +13,6 @@ from django.views.decorators.cache import cache_page
 from django.core.paginator import Paginator
 
 from yatube.settings import NUM_POSTS
-
 
 
 @cache_page(20, key_prefix='index_page')
@@ -65,9 +64,9 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     form = PostForm(
-            request.POST or None,
-            files=request.FILES or None,
-        )
+        request.POST or None,
+        files=request.FILES or None,
+    )
     if not form.is_valid():
         return render(request, 'posts/create_post.html', {'form': form})
     if request.method != 'POST':

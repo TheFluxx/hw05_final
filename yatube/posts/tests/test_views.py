@@ -40,7 +40,7 @@ class PostViewsTest(TestCase):
         cache.clear()
         PostViewsTest.authorized_client = Client()
         PostViewsTest.authorized_client.force_login(self.user)
-    
+
     def post_exist(self, page_context):
         """Метод для проверки существования поста на страницах."""
         if 'page_obj' in page_context:
@@ -100,7 +100,6 @@ class PostViewsTest(TestCase):
         self.assertEqual(post_object.group.title, PostViewsTest.group.title)
         self.assertEqual(post_object.image, PostViewsTest.post.image)
 
-
     def test_group_list_show_correct_context(self):
         """Проверка контекста group_list."""
         response = self.authorized_client.get(
@@ -116,7 +115,6 @@ class PostViewsTest(TestCase):
         self.assertEqual(PostViewsTest.group, post.group)
         self.assertEqual(post.image, PostViewsTest.post.image)
 
-
     def test_profile_show_correct_context(self):
         """Проверка контекста profile"""
         response = self.authorized_client.get(
@@ -131,7 +129,6 @@ class PostViewsTest(TestCase):
         self.assertEqual(PostViewsTest.user, post_object.author)
         self.assertEqual(post_object.image, PostViewsTest.post.image)
 
-
     def test_post_detail_show_correct_context(self):
         """Проверка контекста post_detail."""
         response = self.authorized_client.get(
@@ -143,7 +140,6 @@ class PostViewsTest(TestCase):
         post_object = response.context['post']
         self.assertEqual(self.post, post_object)
         self.assertEqual(post_object.image, PostViewsTest.post.image)
-
 
     def test_post_edit_show_correct_context(self):
         """Проверка контекста post_edit."""
@@ -210,7 +206,7 @@ class PostViewsTest(TestCase):
         )
         self.assertNotEqual(response.context.get('page_obj')[0].group,
                             self.group_two)
-        
+
     def test_follow(self):
         """Тестирование подписки на автора."""
         count_follow = Follow.objects.count()
