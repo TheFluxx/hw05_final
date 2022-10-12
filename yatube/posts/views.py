@@ -38,15 +38,23 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    """Выводит шаблон профайла пользователя"""
     author = get_object_or_404(User, username=username)
-    following = author.following.filter(user=request.user).exists()
+    paginator = Paginator(
+        author.posts.all(), NUM_POSTS
+    )
+    page_obj = paginator.get_page(
+        request.GET.get('page')
+    )
+    following = request.user.is_authenticated
+    if following:
+        following = author.following.filter(user=request.user).exists()
+    template = 'posts/profile.html'
     context = {
+        'page_obj': page_obj,
         'author': author,
-        'page_obj': get_page_context(author.posts.all(), request),
-        'following': following,
+        'following': following
     }
-    return render(request, 'posts/profile.html', context)
+    return render(request, template, context)
 
 
 def post_detail(request, post_id):
