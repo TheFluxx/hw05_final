@@ -28,7 +28,7 @@ def index(request):
 def group_posts(request, slug):
     """Выводит шаблон с группами постов"""
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.filter(group=group).order_by('-pub_date')
+    posts = group.posts.all()
     context = {
         'group': group,
         'posts': posts,
@@ -45,16 +45,14 @@ def profile(request, username):
     page_obj = paginator.get_page(
         request.GET.get('page')
     )
-    following = request.user.is_authenticated
-    if following:
+    if request.user.is_authenticated:
         following = author.following.filter(user=request.user).exists()
-    template = 'posts/profile.html'
     context = {
         'page_obj': page_obj,
         'author': author,
         'following': following
     }
-    return render(request, template, context)
+    return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
@@ -133,12 +131,10 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    # Подписаться на автора
     author = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(
         user=request.user,
         author=author)
-    # Если такой подписки нет, то создать её (на себя нельзя подписаться)
     if not follow.exists() and request.user != author:
         Follow.objects.create(
             user=request.user,
@@ -149,7 +145,6 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    # Дизлайк, отписка
     author = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(
         user=request.user,

@@ -1,10 +1,8 @@
-from ..models import Post, Group
+from ..models import Post, User, Group
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.core.cache import cache
-
-User = get_user_model()
 
 
 class PostCacheTests(TestCase):
@@ -13,6 +11,7 @@ class PostCacheTests(TestCase):
         super().setUpClass()
 
     def setUp(self):
+        cache.clear()
         self.user = User.objects.create_user(username='auth')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)

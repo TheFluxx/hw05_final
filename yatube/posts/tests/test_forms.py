@@ -4,6 +4,8 @@ from django.test import Client, TestCase
 from django.urls import reverse
 import shutil
 import tempfile
+from django.core.cache import cache
+
 
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
@@ -25,6 +27,7 @@ class PostCreateFormTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
         self.authorized_client = Client()
         self.author = User.objects.create_user(
@@ -99,7 +102,7 @@ class PostCreateFormTests(TestCase):
         self.assertRedirects(response, f'{LOGIN_URL}?next={POST_COMMENT_URL}')
 
     def test_authorized_client_add_comment(self):
-        """Валидная форма создает запись в Post."""
+        """Проверка добавления комментария авторизованного пользователя"""
         PostCreateFormTests.post = Post.objects.create(
             author=self.author,
             text='text',

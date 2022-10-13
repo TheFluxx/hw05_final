@@ -1,34 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}
-  Авторы
-{% endblock %} 
+{% block title %}Авторы{% endblock %}
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
-  {% load thumbnail %}
-  {% for post in page_obj %}
-  <div class="container col-lg-9 col-sm-12">
-    <ul>
-    <li>
-      <b>Автор:</b>
-      <a href="{% url 'posts:user' post.author %}">{{ post.author.get_full_name }}</a>
-    </li>
-    <li>
-      <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
-    </li>
-    {% if post.group %}
-    <li>
-      <p><b>Группа:</b> 
-      <a href="{% url 'posts:group_list' post.group.slug %}">{{ post.group.title }}</a></p>
-    </li>
-    {% endif %}
-    </ul>
-    {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-      <img class="card-img my-2" src="{{ im.url }}">
-    {% endthumbnail %}
-    <p>{{ post.text|linebreaks }}</p>
-    <a href="{% url 'posts:post_detail' post.pk %}">(подробная информация)</a>    
-    {% if not forloop.last %}<hr>{% endif %}
+{% include 'posts/includes/switcher.html' %}
+  {% load cache %}
+  {% cache 20 index_page %}
+    <h1>Авторы</h1>
+    {% for post in page_obj %}
+      {% include 'includes/article.html' %}
+      {% if post.group %}   
+        <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы {{ post.group.title }}</a>
+      {% endif %} 
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
   </div>
-  {% endfor %}
+  {% endcache %} 
   {% include 'posts/includes/paginator.html' %}
-{% endblock %} 
+{% endblock %}

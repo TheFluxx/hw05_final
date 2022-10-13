@@ -1,0 +1,21 @@
+<div class="form-group row my-1 p-3"> 
+    <label for="{{ field.id_for_label }}"
+      class="col-md-4 col-form-label text-md-right">
+      {{ field.label }}
+      {% if field.required %}
+        <span class="required">*</span>
+      {% endif %}
+    </label>
+    <div class="form-group row my-1 p-3">
+      <div class="row justify-content-center">
+        {{field}}
+      </div> 
+    </div>
+      {% if field.help_text %}
+        <small id="{{ field.id_for_label }}-help"
+          class="form-text text-muted">
+          {{ field.help_text|safe }}
+        </small>
+      {% endif %}
+  </div>
+</div>

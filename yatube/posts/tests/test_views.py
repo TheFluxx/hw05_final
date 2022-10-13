@@ -3,8 +3,7 @@ from django.urls import reverse
 from django import forms
 from http import HTTPStatus
 from posts.forms import PostForm
-from yatube.settings import NUM_POSTS, SMALL_GIF
-from django.core.files.uploadedfile import SimpleUploadedFile
+from yatube.settings import NUM_POSTS
 from django.core.cache import cache
 
 
@@ -18,11 +17,6 @@ class PostViewsTest(TestCase):
         # Создаём авторизованного пользователя
         cls.user = User.objects.create_user(username='StasBasov')
         # Создаём группу в бд
-        cls.uploaded = SimpleUploadedFile(
-            name='small.gif',
-            content=SMALL_GIF,
-            content_type='image/gif'
-        )
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='test-slug',
@@ -33,7 +27,6 @@ class PostViewsTest(TestCase):
             author=cls.user,
             text='Тестовый текст',
             group=cls.group,
-            image=cls.uploaded
         )
 
     def setUp(self):
@@ -47,19 +40,16 @@ class PostViewsTest(TestCase):
             post = page_context['page_obj'][0]
         else:
             post = page_context['post']
-        task_author = post.author
-        task_text = post.text
-        task_group = post.group
         self.assertEqual(
-            task_author,
+            post.author,
             self.post.author
         )
         self.assertEqual(
-            task_text,
+            post.text,
             self.post.text
         )
         self.assertEqual(
-            task_group,
+            post.group,
             self.post.group
         )
 
@@ -95,10 +85,8 @@ class PostViewsTest(TestCase):
     def test_index_page_show_correct_context(self):
         """Проверка контекста index."""
         response = self.authorized_client.get(reverse('posts:index'))
-        post_object = response.context['page_obj'][0]
-        self.assertEqual(post_object.text, PostViewsTest.post.text)
-        self.assertEqual(post_object.group.title, PostViewsTest.group.title)
-        self.assertEqual(post_object.image, PostViewsTest.post.image)
+        self.post_exist(response.context)
+
 
     def test_group_list_show_correct_context(self):
         """Проверка контекста group_list."""
@@ -255,8 +243,7 @@ class PostViewsTest(TestCase):
         response_follow = authorized_client.get(
             reverse('posts:follow_index')
         )
-        context_follow = response_follow.context
-        self.post_exist(context_follow)
+        self.post_exist(response_follow.context)
 
     def test_unfollowing_posts(self):
         """Тестирование отсутствия поста автора у нового пользователя."""

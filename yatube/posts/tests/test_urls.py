@@ -2,6 +2,8 @@ from django.test import TestCase, Client
 from http import HTTPStatus
 from posts.models import Post, Group, User
 from django.urls import reverse
+from django.core.cache import cache
+
 
 
 class PostURLTests(TestCase):
@@ -21,6 +23,7 @@ class PostURLTests(TestCase):
         )
 
     def setUp(self):
+        cache.clear()
         self.guest_client = Client()
 
         self.author_client = Client()

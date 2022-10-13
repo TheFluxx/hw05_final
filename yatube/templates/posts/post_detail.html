@@ -33,9 +33,9 @@
        {{post.text}}
       </p>
     {% if post.author == user %}
-    <a href="{% url 'posts:post_edit' post.id %}">
-      Редактировать запись
-    </a>
+      <a href="{% url 'posts:post_edit' post.id %}">
+        Редактировать запись
+      </a>
     {% endif%}
     {% include 'includes/comments.html' %}
     </article>
