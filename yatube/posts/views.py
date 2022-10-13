@@ -48,13 +48,12 @@ def profile(request, username):
     following = request.user.is_authenticated
     if following:
         following = author.following.filter(user=request.user).exists()
-    template = 'posts/profile.html'
     context = {
         'page_obj': page_obj,
         'author': author,
         'following': following
     }
-    return render(request, template, context)
+    return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
