@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.core.cache import cache
 
 
-
 class PostURLTests(TestCase):
     @classmethod
     def setUpClass(cls):

@@ -6,8 +6,6 @@ import shutil
 import tempfile
 from django.core.cache import cache
 
-
-
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 

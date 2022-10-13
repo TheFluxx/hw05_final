@@ -87,7 +87,6 @@ class PostViewsTest(TestCase):
         response = self.authorized_client.get(reverse('posts:index'))
         self.post_exist(response.context)
 
-
     def test_group_list_show_correct_context(self):
         """Проверка контекста group_list."""
         response = self.authorized_client.get(
