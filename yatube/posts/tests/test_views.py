@@ -34,8 +34,8 @@ class PostViewsTest(TestCase):
         PostViewsTest.authorized_client = Client()
         PostViewsTest.authorized_client.force_login(self.user)
 
-    def post_exist(self, page_context):
-        """Метод для проверки существования поста на страницах."""
+    def check_context(self, page_context):
+        """Метод для проверки контекста."""
         if 'page_obj' in page_context:
             post = page_context['page_obj'][0]
         else:
@@ -85,7 +85,7 @@ class PostViewsTest(TestCase):
     def test_index_page_show_correct_context(self):
         """Проверка контекста index."""
         response = self.authorized_client.get(reverse('posts:index'))
-        self.post_exist(response.context)
+        self.check_context(response.context)
 
     def test_group_list_show_correct_context(self):
         """Проверка контекста group_list."""
@@ -110,11 +110,7 @@ class PostViewsTest(TestCase):
                 kwargs={'username': 'StasBasov'}
             )
         )
-        post_object = response.context['page_obj'].object_list[0]
-        self.assertEqual(post_object.text, 'Тестовый текст')
-        self.assertEqual(PostViewsTest.group, post_object.group)
-        self.assertEqual(PostViewsTest.user, post_object.author)
-        self.assertEqual(post_object.image, PostViewsTest.post.image)
+        self.check_context(response.context)
 
     def test_post_detail_show_correct_context(self):
         """Проверка контекста post_detail."""
@@ -124,9 +120,7 @@ class PostViewsTest(TestCase):
                 kwargs={'post_id': f'{self.post.id}'}
             )
         )
-        post_object = response.context['post']
-        self.assertEqual(self.post, post_object)
-        self.assertEqual(post_object.image, PostViewsTest.post.image)
+        self.check_context(response.context)
 
     def test_post_edit_show_correct_context(self):
         """Проверка контекста post_edit."""
@@ -242,7 +236,7 @@ class PostViewsTest(TestCase):
         response_follow = authorized_client.get(
             reverse('posts:follow_index')
         )
-        self.post_exist(response_follow.context)
+        self.check_context(response_follow.context)
 
     def test_unfollowing_posts(self):
         """Тестирование отсутствия поста автора у нового пользователя."""

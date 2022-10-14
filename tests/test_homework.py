@@ -273,3 +273,27 @@ class TestCustomErrorPages:
                 f'Убедитесь, что для страниц, возвращающих код {code}, '
                 'настроен кастомный шаблон'
             )
+
+    @pytest.mark.django_db(transaction=True)
+    def test_custom_500(self):
+        code = 500
+
+        try:
+            from yatube.urls import handler500
+        except ImportError:
+            assert False, (
+                f'Убедитесь, что для страниц, возвращающих код {code}, '
+                'настроен кастомный шаблон'
+            )
+
+    @pytest.mark.django_db(transaction=True)
+    def test_custom_403(self):
+        code = 403
+
+        try:
+            from yatube.urls import handler403
+        except ImportError:
+            assert False, (
+                f'Убедитесь, что для страниц, возвращающих код {code}, '
+                'настроен кастомный шаблон'
+            )

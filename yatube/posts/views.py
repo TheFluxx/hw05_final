@@ -1,24 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404
-
 from django.contrib.auth.decorators import login_required
-
-from .models import Post, Group, User, Follow
-
-from .forms import PostForm, CommentForm
-
-from .utils import get_page_context
-
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
 
-from django.core.paginator import Paginator
-
 from yatube.settings import NUM_POSTS
+
+from .forms import CommentForm, PostForm
+from .models import Follow, Group, Post, User
+from .utils import get_page_context
 
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
     """Выводит шаблон главной страницы"""
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('group').all()
     context = {
         'page_obj': get_page_context(posts, request)
     }
@@ -31,7 +26,6 @@ def group_posts(request, slug):
     posts = group.posts.all()
     context = {
         'group': group,
-        'posts': posts,
         'page_obj': get_page_context(posts, request)
     }
     return render(request, 'posts/group_list.html', context)
@@ -39,17 +33,9 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    paginator = Paginator(
-        author.posts.all(), NUM_POSTS
-    )
-    page_obj = paginator.get_page(
-        request.GET.get('page')
-    )
-    following = request.user.is_authenticated
-    if following:
-        following = author.following.filter(user=request.user).exists()
+    following = request.user.is_authenticated and author.following.filter(user=request.user).exists()
     context = {
-        'page_obj': page_obj,
+        'page_obj': get_page_context(author.posts.all(), request),
         'author': author,
         'following': following
     }
@@ -121,11 +107,9 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     posts = Post.objects.filter(author__following__user=request.user)
-    paginator = Paginator(posts, NUM_POSTS)
-    page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
-        'page_obj': page_obj,
+        'page_obj': get_page_context(posts, request),
     }
     return render(request, 'posts/follow.html', context)
 
