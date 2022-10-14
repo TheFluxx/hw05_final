@@ -1,9 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
-
-from yatube.settings import NUM_POSTS
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
@@ -33,7 +30,7 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    following = request.user.is_authenticated and author.following.filter(user=request.user).exists()
+    following = request.user.is_authenticated and author.following.exists()
     context = {
         'page_obj': get_page_context(author.posts.all(), request),
         'author': author,
@@ -107,7 +104,6 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     posts = Post.objects.filter(author__following__user=request.user)
-    page_obj = paginator.get_page(page_number)
     context = {
         'page_obj': get_page_context(posts, request),
     }
