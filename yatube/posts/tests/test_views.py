@@ -97,9 +97,7 @@ class PostViewsTest(TestCase):
         )
         self.assertIn('page_obj', response.context)
         post = response.context['page_obj'][0]
-        self.assertEqual(PostViewsTest.user, post.author)
-        self.assertEqual(post.text, 'Тестовый текст')
-        self.assertEqual(PostViewsTest.group, post.group)
+        self.check_context(response.context)
         self.assertEqual(post.image, PostViewsTest.post.image)
 
     def test_profile_show_correct_context(self):

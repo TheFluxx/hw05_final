@@ -10,7 +10,7 @@ from .utils import get_page_context
 @cache_page(20, key_prefix='index_page')
 def index(request):
     """Выводит шаблон главной страницы"""
-    posts = Post.objects.select_related('group').all()
+    posts = Post.objects.select_related('group', 'author').all()
     context = {
         'page_obj': get_page_context(posts, request)
     }
@@ -20,7 +20,7 @@ def index(request):
 def group_posts(request, slug):
     """Выводит шаблон с группами постов"""
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.all()
+    posts = Post.objects.select_related('author').all()
     context = {
         'group': group,
         'page_obj': get_page_context(posts, request)
@@ -32,7 +32,7 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     following = request.user.is_authenticated and author.following.exists()
     context = {
-        'page_obj': get_page_context(author.posts.all(), request),
+        'page_obj': get_page_context(Post.objects.select_related('group').all(), request),
         'author': author,
         'following': following
     }
