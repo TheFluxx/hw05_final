@@ -6,9 +6,13 @@
   {% cache 20 index_page %}
     <h1>Последние обновления на сайте</h1>
     {% for post in page_obj %}
-      {% include 'includes/article.html'%}
-      {% if not forloop.last %}<hr>{% endif %}
-    {% endfor %}
+    {% include 'includes/article.html' %}
+    <a href="{% url 'posts:post_detail' post.id %}" class="btn btn-primary">Подробная информация</a>  
+    {% if post.group %}
+        <a href="{% url 'posts:group_list' post.group.slug %}" class="btn btn-primary">Все записи группы "{{ post.group }}"</a>
+    {% endif %}
+  {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
   </div>
   {% endcache %} 
   {% include 'posts/includes/paginator.html' %}
