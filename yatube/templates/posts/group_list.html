@@ -8,5 +8,5 @@
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
 </div>
-{% include 'posts/includes/paginator.html' %}  
+{% include 'posts/includes/paginator.html' with is_not_group=False %}  
 {% endblock %}

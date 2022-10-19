@@ -23,12 +23,8 @@
   {% endif %}
   {% for post in page_obj %}
     {% include 'includes/article.html' %}
-    <a href="{% url 'posts:post_detail' post.id %}" class="btn btn-primary">Подробная информация</a>  
-    {% if post.group %}
-        <a href="{% url 'posts:group_list' post.group.slug %}" class="btn btn-primary">Все записи группы "{{ post.group }}"</a>
-    {% endif %}
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
 </div>  
-{% include 'posts/includes/paginator.html' %}
+{% include 'posts/includes/paginator.html' with is_not_group=True %}
 {% endblock %} 

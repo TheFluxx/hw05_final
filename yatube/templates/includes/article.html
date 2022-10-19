@@ -11,5 +11,9 @@
   {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
       <img class="card-img my-2" src="{{ im.url }}">
   {% endthumbnail %}  
-  <p>{{ post.text| linebreaksbr }}</p> 
+  <p>{{ post.text| linebreaksbr }}</p>
+  <a href="{% url 'posts:post_detail' post.id %}" class="btn btn-primary">Подробная информация</a>  
+  {% if post.group and is_not_group %}
+    <a href="{% url 'posts:group_list' post.group.slug %}" class="btn btn-primary">Все записи группы "{{ post.group }}"</a>
+  {% endif %}
 </article>
