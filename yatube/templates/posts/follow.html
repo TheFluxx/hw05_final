@@ -11,5 +11,5 @@
     {% endfor %}
   </div>
   {% endcache %} 
-  {% include 'posts/includes/paginator.html' %}
+  {% include 'posts/includes/paginator.html' with is_not_group=True %}
 {% endblock %}
