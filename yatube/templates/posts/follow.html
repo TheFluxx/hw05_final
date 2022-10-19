@@ -7,9 +7,6 @@
     <h1>Авторы</h1>
     {% for post in page_obj %}
       {% include 'includes/article.html' %}
-      {% if post.group %}   
-        <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы {{ post.group.title }}</a>
-      {% endif %} 
       {% if not forloop.last %}<hr>{% endif %}
     {% endfor %}
   </div>
