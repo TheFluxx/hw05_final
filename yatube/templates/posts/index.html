@@ -6,10 +6,10 @@
   {% cache 20 index_page %}
     <h1>Последние обновления на сайте</h1>
   {% for post in page_obj %}
-    {% include 'includes/article.html' %}
+    {% include 'includes/article.html' with is_not_group=True %}
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
   </div>
   {% endcache %} 
-  {% include 'posts/includes/paginator.html' with is_not_group=True %}
+  {% include 'posts/includes/paginator.html' %}
 {% endblock %}
